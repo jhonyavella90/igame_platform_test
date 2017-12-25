@@ -13,7 +13,6 @@ from igame_platform.accounts import views as account_views
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/index.html'), name='index'),
-    url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
 
     # Your stuff: custom urls includes go here
     url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'),
