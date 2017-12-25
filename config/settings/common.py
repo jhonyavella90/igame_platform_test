@@ -239,3 +239,7 @@ ALLOWED_HOSTS = []
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 EMAIL_SUBJECT_PREFIX = '[igame-platform] '
 SERVER_EMAIL = 'admin@localhost'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/'

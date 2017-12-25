@@ -7,16 +7,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django.contrib.auth import views as auth_views
+
+from igame_platform.accounts import views as account_views
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
+    url(r'^$', TemplateView.as_view(template_name='pages/index.html'), name='index'),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
+
+    # Your stuff: custom urls includes go here
+    url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'),
+    url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^register/$', account_views.RegisterView.as_view(), name='register'),
+    url(r'^home/$', account_views.home, name='home'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),
-
-    # Your stuff: custom urls includes go here
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
