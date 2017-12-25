@@ -44,7 +44,6 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'igame_platform.users.apps.UsersConfig',
     # Your stuff: custom apps go here
 )
 
@@ -63,16 +62,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-# MIGRATIONS CONFIGURATION
-# ------------------------------------------------------------------------------
-MIGRATION_MODULES = {
-    'sites': 'igame_platform.contrib.sites.migrations'
-}
-
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', False)
+DEBUG = False
 
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -83,7 +76,7 @@ FIXTURE_DIRS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -99,11 +92,13 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db('DATABASE_URL', default='postgres:///igame_platform'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(ROOT_DIR.path('db/mydb.sqlite3')),
+        'ATOMIC_REQUESTS': True
+    }
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
-
+DATABASE_DEFAULT_URL = 'sqlite:///' + str(ROOT_DIR.path('db/mydb.sqlite3'))
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -164,9 +159,6 @@ TEMPLATES = [
     },
 ]
 
-# See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
@@ -205,28 +197,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ------------------------------------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# Some really nice defaults
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-
-ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'igame_platform.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'igame_platform.users.adapters.SocialAccountAdapter'
-
-# Custom user app defaults
-# Select the correct user model
-AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'
 LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
-########## CELERY
+# CELERY
+# ------------------------------------------------------------------------------
 INSTALLED_APPS += ('igame_platform.taskapp.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
@@ -236,11 +215,6 @@ if BROKER_URL == 'django://':
 else:
     CELERY_RESULT_BACKEND = BROKER_URL
 ########## END CELERY
-
-
-# django-compressor
-# ------------------------------------------------------------------------------
-
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
@@ -257,5 +231,11 @@ WEBPACK_LOADER = {
     }
 }
 
-
 # Your common stuff: Below this line define 3rd party library settings
+
+# Dummy secret key for dev/test
+SECRET_KEY = 'dev key'
+ALLOWED_HOSTS = []
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+EMAIL_SUBJECT_PREFIX = '[igame-platform] '
+SERVER_EMAIL = 'admin@localhost'
