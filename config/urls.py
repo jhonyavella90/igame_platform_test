@@ -10,15 +10,27 @@ from django.views import defaults as default_views
 from django.contrib.auth import views as auth_views
 
 from igame_platform.accounts import views as account_views
+from igame_platform.accounts.decorators import redirect_if_logged_in
+from igame_platform.core import views as core_views
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='pages/index.html'), name='index'),
+    url(
+        r'^$',
+        redirect_if_logged_in(TemplateView.as_view(template_name='pages/index.html')),
+        name='index'
+    ),
 
     # Your stuff: custom urls includes go here
-    url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'),
+    url(
+        r'^login/$', auth_views.login,
+        {'template_name': 'accounts/login.html', 'redirect_authenticated_user': True}, name='login'
+    ),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^register/$', account_views.RegisterView.as_view(), name='register'),
     url(r'^home/$', account_views.home, name='home'),
+
+    # Core app urls
+    url(r'^deposit/$', core_views.DepositView.as_view(), name='deposit'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),

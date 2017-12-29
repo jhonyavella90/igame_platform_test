@@ -1,7 +1,23 @@
 {% extends "base.html" %}
+{% load staticfiles i18n %}
 
 {% block content %}
 <h1>
 Logged in as user {{ request.user.username }}
 </h1>
+<br>
+<br>
+<ul>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'deposit' %}">
+      <button>{% trans "Deposit Money" %}</button>
+    </a>
+  </li>
+  <br>
+  <li class="nav-item">
+    <a class="nav-link" href="#">
+      <button>{% trans "Bet" %}</button>
+    </a>
+  </li>
+</ul>
 {% endblock %}

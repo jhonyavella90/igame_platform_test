@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Deposit</h2>
+  <p>Here you can deposit some money to play spins</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Deposit</button>
+  </form>
+{% endblock %}

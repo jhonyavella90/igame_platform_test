@@ -36,3 +36,7 @@
 [hidden][style="display: block;"] {
   display: block !important;
 }
+
+ul {
+  list-style-type: none;
+}
